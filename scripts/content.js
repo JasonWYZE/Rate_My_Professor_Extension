@@ -54,7 +54,3 @@
 // });
 // obs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
 
-let nicknames;
-chrome.storage.local.get(['nicknames'], function(result) {
-    console.log(result)
-});
