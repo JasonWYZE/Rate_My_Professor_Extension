@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Rate my professor",
+  "version": "1.0",
+  "description": "Add the reading time to Chrome Extension documentation articles",
+  "icons":{
+    "16": "images/Babson_College.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.myworkday.com/babson/d/gateway.*"
+      ],
+      "run_at": "document_end",
+      "js": ["scripts/content.js"]
+      
+    }
+  ]
+}
