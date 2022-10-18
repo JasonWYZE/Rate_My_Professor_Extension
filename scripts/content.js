@@ -54,3 +54,30 @@
 // });
 // obs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
 
+
+
+
+
+// const selectors = document.getElementsByClassName('gwt-InlineLabel WL5F WK4F')
+// Array.from(selectors).forEach(selector => {
+//     document.arrive(selector, function(){
+//         console.log(selector.textContent)
+//     });
+// });
+
+
+var obs = new MutationObserver(function(event) 
+{
+  var courses = document.getElementsByClassName('gwt-InlineLabel WL5F WK4F');
+  Array.from(courses).forEach(selector => 
+    {
+
+        const professor = selector.textContent.substring(
+            selector.textContent.lastIndexOf("Instructor:") + 11, 
+            selector.textContent.lastIndexOf("Enrolled")-5).trim();
+
+        console.log(professor)
+    });
+})
+
+obs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
