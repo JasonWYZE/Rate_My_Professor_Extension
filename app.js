@@ -9,21 +9,9 @@ selectors.forEach(selector => {
         const splitName = fullName.split(' ');
         const firstName = splitName[0].toLowerCase().trim();
         const lastName = splitName.slice(-1)[0].toLowerCase().trim();
-        let middleNames = [];
-        let originalMiddleNames = [];
-        if (splitName.length > 2) {
-            middleNames = [...splitName.slice(1, splitName.length-1).map(name => name.toLowerCase().trim())];
-            originalMiddleNames = [...middleNames];
-        }
+     
         // Try with no middle names at first
-        const tryMiddleNames = false;
-        const tryNicknames = true;
-        const tryMiddleAndLastNameCombos = true;
-        const originalFirstName = firstName;
-        const originalLastName = lastName;
-        const nicknamesIndex = 0;
-        const middleAndLastNameCombosIndex = 0;
-        const tryMiddleNameAsFirst = true;
+    
         // Query Rate My Professor with the professor's name
         GetProfessorRating(this, fullName, lastName, originalLastName, firstName, originalFirstName, middleNames,
             originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos,
@@ -31,29 +19,16 @@ selectors.forEach(selector => {
     });
 });
 
-let restoreFirstName = false;
-let restoreMiddleNames = false;
-function GetProfessorRating(element, fullName, lastName, originalLastName, firstName, originalFirstName, middleNames,
-    originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos, middleAndLastNameCombosIndex, 
-    tryMiddleNameAsFirst, tryMiddleNames) {
+// let restoreFirstName = false;
+// let restoreMiddleNames = false;
 
-    const middleNamesString = tryMiddleNames ? middleNames.join('+') : '';
+function GetProfessorRating(element, fullName, lastName, firstName) {
     const schoolName = 'Babson College';
     const urlBase = 
     "https://search-production.ratemyprofessors.com/solr/rmp/select/?solrformat=true&rows=2&wt=json&q=";
-    url = `${urlBase}${firstName ? firstName + '+' : ''}${middleNamesString === '' ? '' : middleNamesString + "+"}${
-        tryMiddleAndLastNameCombos && middleNamesString ? '' : lastName}+AND+schoolname_t:${schoolName}`;
-    const middleAndLastNameCombos = getNameCombos(originalMiddleNames.concat(lastName));
-    // Restore fields after certain iterations 
-    if (restoreFirstName) {
-        firstName = originalFirstName;
-        restoreFirstName = false;
-    }
-    if (restoreMiddleNames) {
-        middleNames = [...originalMiddleNames];
-        restoreMiddleNames = false;
-    }
-
+    url = `${urlBase}${firstName ? firstName + '+' : ''}${lastName}+AND+schoolname_t:${schoolName}`;
+    
+  
     chrome.runtime.sendMessage(url, async function (json) { 
         const numFound = json.response.numFound;
         const docs = json.response.docs;
@@ -64,6 +39,7 @@ function GetProfessorRating(element, fullName, lastName, originalLastName, first
         element.classList.add('blueText');
         element.parentElement && element.parentElement.classList.add('classSearchBasicResultsText');
         // Add professor data if found
+
         if (numFound > 0) {
             doc = docs[0];
             if (doc) {
@@ -83,59 +59,10 @@ function GetProfessorRating(element, fullName, lastName, originalLastName, first
                 AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRatings, easyRating, dept);
             }
         } else {
-            // Try again with only the first part of a hyphenated last name
-            if (lastName.includes("-")) {
-                lastName = lastName.split('-')[0];
-                GetProfessorRating(element, fullName, lastName, originalLastName, firstName, originalFirstName, 
-                    middleNames, originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos,
-                    middleAndLastNameCombosIndex, tryMiddleNameAsFirst, tryMiddleNames);
-            }
-            // Try again with different middle and last names combos
-            else if (tryMiddleNames && tryMiddleAndLastNameCombos && 
-                middleAndLastNameCombos[middleAndLastNameCombosIndex]) {
-                middleNames = middleAndLastNameCombos[middleAndLastNameCombosIndex];
-                middleAndLastNameCombosIndex++;
-                tryMiddleAndLastNameCombos = middleAndLastNameCombos[middleAndLastNameCombosIndex];
-                if (!tryMiddleAndLastNameCombos) {
-                    restoreMiddleNames = true;
-                }
-                GetProfessorRating(element, fullName, lastName, originalLastName, firstName, originalFirstName, 
-                    middleNames, originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos,
-                    middleAndLastNameCombosIndex, tryMiddleNameAsFirst, tryMiddleNames);
-            }
-            // Try again with nicknames for the first name
-            // else if (tryNicknames && nicknames[originalFirstName]) {
-            //     firstName = nicknames[originalFirstName][nicknamesIndex];
-            //     nicknamesIndex++;
-            //     tryNicknames = nicknames[originalFirstName][nicknamesIndex];
-            //     if (!tryNicknames) {
-            //         restoreFirstName = true;
-            //     }
-            //     GetProfessorRating(element, fullName, lastName, originalLastName, firstName, originalFirstName, 
-            //         middleNames, originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos,
-            //         middleAndLastNameCombosIndex, tryMiddleNameAsFirst, tryMiddleNames);
-            // }
-            // Try again with the middle name as the first name
-            else if (tryMiddleNameAsFirst && !tryMiddleNames && originalMiddleNames.length > 0) {
-                tryMiddleNameAsFirst = false;
-                restoreFirstName = true;
-                GetProfessorRating(element, fullName, lastName, originalLastName, firstName, originalFirstName, 
-                    middleNames, originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos,
-                    middleAndLastNameCombosIndex, tryMiddleNameAsFirst, tryMiddleNames);
-            }
-            // Try again with middle names
-            else if (!tryMiddleNames && originalMiddleNames.length > 0) {
-                tryMiddleNames = true;
-                GetProfessorRating(element, fullName, lastName, originalLastName, firstName, originalFirstName, 
-                    middleNames, originalMiddleNames, tryNicknames, nicknamesIndex, tryMiddleAndLastNameCombos,
-                    middleAndLastNameCombosIndex, tryMiddleNameAsFirst, tryMiddleNames);
-            }
-            // Set link to search results if not found
-            else {
+            // 
                 element.textContent = `${element.textContent} (NF)`;
                 element.setAttribute('href', 
-                `https://www.ratemyprofessors.com/search/teachers?query=${originalLastName}&sid=${schoolId}`);
-            }
+                `https://www.ratemyprofessors.com/search/teachers?query=${LastName}&sid=${schoolId}`);
         }        
     });
 }

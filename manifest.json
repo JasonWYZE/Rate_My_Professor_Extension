@@ -11,13 +11,28 @@
   ],
   "content_scripts": [
     {
+      "js": [
+        "node_modules/arrive/minified/arrive.min.js",
+			  "node_modules/@popperjs/core/dist/umd/popper.min.js",
+			  "node_modules/tippy.js/dist/tippy-bundle.umd.min.js",
+        "scripts/content.js"
+      ],
+      "css":[ 
+        "node_modules/tippy.js/dist/tippy.css",
+			  "node_modules/tippy.js/themes/light.css",
+        "prof-rating.css"
+
+      ],
       "matches": [
         "https://www.myworkday.com/babson/d/gateway.*",
         "https://www.google.com/"
       ],
-      "run_at": "document_end",
-      "js": ["scripts/content.js"]
+      "run_at": "document_end"
       
     }
-  ]
+  ],
+  "background": {
+		"service_worker": "bg-wrapper.js"
+	}
+  
 }
