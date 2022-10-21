@@ -92,15 +92,16 @@ var obs = new MutationObserver(function(event)
 
 
 function GetProfessorRating(element, fullName, lastName, firstName) {
-    const schoolName = 'Babson College';
+    const schoolName = 'Babson+College';
     const urlBase = 
     "https://search-production.ratemyprofessors.com/solr/rmp/select/?solrformat=true&rows=2&wt=json&q=";
     url = `${urlBase}${firstName ? firstName + '+' : ''}${lastName}+AND+schoolname_t:${schoolName}`;
- 
+    console.log(url)
     chrome.runtime.sendMessage(url, async function (json) { 
-        
+        console.log(json)
         const numFound = json.response.numFound;
         const docs = json.response.docs;
+        console.log(docs)
         const schoolId = 'U2Nob29sLTcz';
         
         // U2Nob29sLTcz: School-73
