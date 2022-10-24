@@ -6,6 +6,9 @@
   "icons":{
     "16": "images/Babson_College.png"
   },
+  "host_permissions": [
+		"https://search-production.ratemyprofessors.com/*"	
+  ],
   "permissions": [
     "storage"
   ],
