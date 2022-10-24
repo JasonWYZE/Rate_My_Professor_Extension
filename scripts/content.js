@@ -82,7 +82,7 @@ var obs = new MutationObserver(function(event)
         const lastName = splitName.slice(-1)[0].toLowerCase().trim();
 
    
-        GetProfessorRating(this,fullName, lastName, firstName);
+        GetProfessorRating(selector, lastName, firstName);
     });
 })
 
@@ -96,9 +96,8 @@ function GetProfessorRating(element, lastName, firstName) {
     const urlBase = 
     "https://search-production.ratemyprofessors.com/solr/rmp/select/?solrformat=true&rows=2&wt=json&q=";
     url = `${urlBase}${firstName ? firstName + '+' : ''}${lastName}+AND+schoolname_t:${schoolName}`;
-    console.log(url)
     chrome.runtime.sendMessage(url, async function (json) { 
-        console.log(json)
+        console.log(element)
         const numFound = json.response.numFound;
         const docs = json.response.docs;
         console.log(docs)
@@ -131,7 +130,7 @@ function GetProfessorRating(element, lastName, firstName) {
                 AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRatings, easyRating, dept);
             }
         } else {
-            // 
+            // Doesn't found the professor
                 element.textContent = `${element.textContent} (NF)`;
                 element.setAttribute('href', 
                 `https://www.ratemyprofessors.com/search/teachers?query=${LastName}&sid=${schoolId}`);
@@ -161,6 +160,8 @@ function AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRat
                 let notHelpCount;
                 let wouldTakeAgainText;
                 let easyRatingText;
+                
+
 
                 const div = document.createElement("div");
                 const title = document.createElement("div");
