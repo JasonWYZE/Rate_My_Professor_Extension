@@ -27,7 +27,7 @@
 
       ],
       "matches": [
-        "https://www.myworkday.com/babson/d/gateway.*",
+        "https://www.myworkday.com/babson/d/*",
         "https://www.google.com/"
       ],
       "run_at": "document_end"
