@@ -11,14 +11,19 @@ Since Babson Google account block user to use Chrome extension, you need to use 
 <img src="/images/Download Zip.PNG" alt="Alt text" title="Download File">
 
 2. Unzip the file by right click and select extract all
+<img src="/images/Unzip File.PNG" alt="Alt text" title="Unzip File">
 
-3. Open your Chrome browser and go to  Extensions page
+3. Open your Chrome browser and go to Extensions page
+<img src="/images/Unzip File.PNG" alt="Alt text" title="Unzip File">
 
 4. Make sure the Developer Mode is enabled.
+<img src="/images/Open Extensions.PNG" alt="Alt text" title="Open Extensions">
 
 5. Click the Load upacked button
+<img src="/images/Load unpacked.PNG" alt="Alt text" title="Load unpacked">
 
 6. Select and upload the extracted folder
+<img src="/images/Select Folder.PNG" alt="Alt text" title="Select Folder">
 
 7. Your Babson Rate my professor extension is installed.
 
