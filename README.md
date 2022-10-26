@@ -11,7 +11,7 @@ The most helpful rating is chosen as the most recent rating with the most net up
 
 
 <h1> Install </h1>
-Since Babson Google account block user to use Chrome extension, you need to use your personal google account to install this Chrome extension. Here is the steps you need to install a Chrome extension.
+Since Babson Google account block user to use Chrome extension, you need to use your personal google account to install this Chrome extension. Follow the steps below:
 
 1. Download the ZIP file from github
 <img src="/images/Download Zip.PNG" alt="Alt text" title="Download File">
