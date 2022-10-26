@@ -11,13 +11,13 @@ Since Babson Google account block user to use Chrome extension, you need to use 
 <img src="/images/Download Zip.PNG" alt="Alt text" title="Download File">
 
 2. Unzip the file by right click and select extract all
-<img src="/images/Unzip File.PNG" alt="Alt text" title="Unzip File">
+<img src="/images/Unzip File.png" alt="Alt text" title="Unzip File">
 
 3. Open your Chrome browser and go to Extensions page
-<img src="/images/Unzip File.PNG" alt="Alt text" title="Unzip File">
+<img src="/images/Open Extensions.PNG" alt="Alt text" title="Open Extensions">
 
 4. Make sure the Developer Mode is enabled.
-<img src="/images/Open Extensions.PNG" alt="Alt text" title="Open Extensions">
+<img src="/images/Developer Tool.PNG" alt="Alt text" title="Developer Tool">
 
 5. Click the Load upacked button
 <img src="/images/Load unpacked.PNG" alt="Alt text" title="Load unpacked">
