@@ -1,62 +1,3 @@
-// const article = document.querySelector("article");
-
-// // `document.querySelector` may return null if the selector doesn't match anything.
-// if (article) {
-//   const text = article.textContent;
-//   const wordMatchRegExp = /[^\s]+/g; // Regular expression
-//   const words = text.matchAll(wordMatchRegExp);
-//   // matchAll returns an iterator, convert to array to get word count
-//   const wordCount = [...words].length;
-//   const readingTime = Math.round(wordCount / 200);
-//   const badge = document.createElement("p");
-//   // Use the same styling as the publish information in an article's header
-//   badge.classList.add("color-secondary-text", "type--caption");
-//   badge.textContent = `⏱️ ${readingTime} min read`;
-
-//   // Support for API reference docs
-//   const heading = article.querySelector("h1");
-//   // Support for article docs with date
-//   const date = article.querySelector("time")?.parentNode;
-
-//   (date ?? heading).insertAdjacentElement("afterend", badge);
-// }
-
-
-
-// Course_listing = document.getElementsByClassName("WHLO WLKO")[0].getElementsByTagName("li")[0].getElementsByClassName("gwt-InlineLabel WG5F WF4F");
-
-
-// document.addEventListener("load", function(event) {
-//   console.log(document.getElementById('gwt-uid-4'))
-
-//   var courses = document.getElementsByClassName('gwt-InlineLabel WG5F WF4F');
-//   if(courses){
-//     console.log(courses.length);
-//     console.log(courses[0]);
-//     console.log(courses[0].textContent);
-//   }
-//   else{
-//     console.log("Null");
-//   }
-// });
-
-
-
-// var obs = new MutationObserver(function(event) {
-//   // console.log(document.getElementById('gwt-uid-4'))
-
-//   var courses = document.getElementsByClassName('gwt-InlineLabel WL5F WK4F');
-//   if(courses){
-//     console.log(courses[0].textContent);
-//     courses[0].textContent = "INTRODUCTION TO FINANCIAL ACCOUNTING   |   Full Session   |   Open   |   Credits: 4.00   |   Instructor: Shay Blanchette Proulx (4/5)   |   Enrolled/Capacity: 0/38"
-
-//   }
-// });
-// obs.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
-
-
-
-
 
 const urlBase = "https://search-production.ratemyprofessors.com/solr/rmp/select/?solrformat=true&rows=2&wt=json&q=";
 
@@ -80,9 +21,9 @@ var obs = new MutationObserver(function(event)
         const splitName = fullName.split(' ');
         const firstName = splitName[0].toLowerCase().trim();
         const lastName = splitName.slice(-1)[0].toLowerCase().trim();
+        const tryLastName = true
 
-   
-        GetProfessorRating(selector, fullName, lastName, firstName);
+        GetProfessorRating(selector, fullName, lastName, firstName, tryLastName);
     });
 })
 
@@ -91,15 +32,15 @@ var obs = new MutationObserver(function(event)
 
 
 
-function GetProfessorRating(element, fullName, lastName, firstName) {
+function GetProfessorRating(element, fullName, lastName, firstName, tryLastName) {
     const schoolName = 'Babson+College';
     const urlBase = 
     "https://search-production.ratemyprofessors.com/solr/rmp/select/?solrformat=true&rows=2&wt=json&q=";
     url = `${urlBase}${firstName ? firstName + '+' : ''}${lastName}+AND+schoolname_t:${schoolName}`;
+    console.log(url)
     chrome.runtime.sendMessage(url, async function (json) { 
         const numFound = json.response.numFound;
         const docs = json.response.docs;
-        console.log(docs)
         const schoolId = 'U2Nob29sLTcz';
         
         // U2Nob29sLTcz: School-73
@@ -108,11 +49,12 @@ function GetProfessorRating(element, fullName, lastName, firstName) {
         element.setAttribute('target', '_blank');
         element.classList.add('blueText');
         element.parentElement && element.parentElement.classList.add('classSearchBasicResultsText');
+
+        tryLastName = true
         // Add professor data if found
         if (numFound > 0) {
             doc = docs[0];
-           
-            if (doc) {
+            if (doc && doc.averageratingscore_rf != "0.0") {
                 const profID = doc.pk_id;
                 const realFullName = doc.teacherfullname_s;
                 const dept = doc.teacherdepartment_s;
@@ -121,7 +63,17 @@ function GetProfessorRating(element, fullName, lastName, firstName) {
                 const easyRating = doc.averageeasyscore_rf && doc.averageeasyscore_rf.toFixed(1);
 
                 const profURL = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + profID;
-                element.textContent += ` (${profRating ? profRating : 'N/A'})`;
+
+                if(element.textContent.lastIndexOf("Enrolled") == -1)
+                {
+                    element.textContent = element.textContent.slice(0,element.textContent.lastIndexOf(fullName)+fullName.length)+` (${profRating})`
+                }
+                else{
+                    element.textContent = element.textContent.slice(0,element.textContent.lastIndexOf(fullName)+fullName.length)+` (${profRating})`+ 
+                            element.textContent.slice(element.textContent.lastIndexOf("Enrolled")-5);
+                }
+                // element.textContent += ` (${profRating ? profRating : 'N/A'})`;
+                console.log(fullName + ":     " + profRating)
                 element.setAttribute('href', profURL);
 
                 let allprofRatingsURL = "https://www.ratemyprofessors.com/paginate/professors/ratings?tid=" + profID +
@@ -129,10 +81,19 @@ function GetProfessorRating(element, fullName, lastName, firstName) {
                 AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRatings, easyRating, dept);
             }
         } else {
+            if(tryLastName){
+                tryLastName = false;
+                GetProfessorRating(element, fullName, lastName, "")
+            }
+
+            else{
+
+            
             // Doesn't found the professor
                 element.textContent = `${element.textContent} (NF)`;
                 element.setAttribute('href', 
                 `https://www.ratemyprofessors.com/search/teachers?query=${LastName}&sid=${schoolId}`);
+            }
         }        
     });
 
@@ -284,7 +245,7 @@ function AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRat
                 tippy(element, {
                     theme: 'light',
                     allowHTML: true,
-                    placement: 'right',
+                    placement: 'top-start',
                     // show delay is 500ms, hide delay is 0ms
                     delay: [500, 0],
                     onShow: function(instance) {
@@ -298,4 +259,4 @@ function AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRat
     getRatings(allprofRatingsURL);
 }
 
-obs.observe(document.body, { childList: true, subtree: false, attributes: false, characterData: true });
+obs.observe(document.body, { childList: true, subtree: false, attributes: true, characterData: true });
