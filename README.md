@@ -20,7 +20,7 @@ Since Babson Google account block user to use Chrome extension, you need to use 
 <img src="/images/Unzip File.png" alt="Alt text" title="Unzip File">
 
 3. Open your Chrome browser and go to Extensions page
-<img src="/images/Open Extensions.PNG" alt="Alt text" title="Open Extensions">
+<img src="/images/Open Extensions.png" alt="Alt text" title="Open Extensions">
 
 4. Make sure the Developer Mode is enabled.
 <img src="/images/Developer Tool.PNG" alt="Alt text" title="Developer Tool">
