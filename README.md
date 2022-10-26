@@ -5,6 +5,10 @@ This extension shows the [Rate My Professors](https://www.ratemyprofessors.com/)
 
 The most helpful rating is chosen as the most recent rating with the most net upvotes (regardless of the quality given). (The most helpful rating on Rate My Professors always has an "Awesome" overall quality.) Also, the "Would take again" value won't show up unless there are eight or more ratings and the majority of ratings answer that question. 
 
+<img src="/images/workday1.PNG" alt="Alt text" title="Workday">
+<img src="/images/workday2.PNG.PNG" alt="Alt text" title="Workday">
+
+
 
 <h1> Install </h1>
 Since Babson Google account block user to use Chrome extension, you need to use your personal google account to install this Chrome extension. Here is the steps you need to install a Chrome extension.
