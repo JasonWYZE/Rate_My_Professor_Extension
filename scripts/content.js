@@ -259,4 +259,4 @@ function AddTooltip(element, allprofRatingsURL, realFullName, profRating, numRat
     getRatings(allprofRatingsURL);
 }
 
-obs.observe(document.body, { childList: true, subtree: false, attributes: true, characterData: true });
+obs.observe(document.body, { childList: true, subtree: false, attributes: false, characterData: false });
