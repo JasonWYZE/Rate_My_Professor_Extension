@@ -36,6 +36,7 @@ function GetProfessorRating(
   url = `${urlBase}${
     firstName ? firstName + "+" : ""
   }${lastName}+AND+schoolname_t:${schoolName}`;
+  console.log(url)
   chrome.runtime.sendMessage(url, async function (json) {
     const numFound = json.response.numFound;
     const docs = json.response.docs;
